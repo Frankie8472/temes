@@ -3,6 +3,7 @@ bot.token
 credentials.json
 token.json
 whitelist_chat
+whitelist_chat_history
 whitelist_email
 .idea/
 

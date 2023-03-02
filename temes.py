@@ -111,7 +111,8 @@ async def send_to_gmail(update: Update, context: ContextTypes.DEFAULT_TYPE):
         service = build('gmail', 'v1', credentials=creds)
         whitelist = load_whitelist_email()
         for email in whitelist:
-            message_body = create_message('me', email, 'Telegram Message: Sauna Channel', update.message.text)
+            msg = f"{update.message.from_user.first_name} {update.message.from_user.last_name} (@{update.message.from_user.username}): \n\n{update.message.text}"
+            message_body = create_message('me', email, 'Telegram Message: Sauna Channel', msg)
             send_message(service, 'me', message_body)
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
@@ -187,12 +188,14 @@ async def pull_email(context: ContextTypes.DEFAULT_TYPE):
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global channel
+    global run
     if not usage_allowed(update):
         print(">> Killed")
         await context.bot.leave_chat(chat_id=update.effective_chat.id)
         return
     if not run:
         print(">> Started Successfully")
+        run = True
         send_to_gmail_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), send_to_gmail)
         application.job_queue.run_repeating(pull_email, interval=5, first=5)
         application.add_handler(send_to_gmail_handler)
