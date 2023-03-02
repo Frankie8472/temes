@@ -1,2 +1,2 @@
-# Telegram - EMail Exchange Service (TEMES)
+# TElegram - Mail Exchange Service (TEMES)
 ## TODO
