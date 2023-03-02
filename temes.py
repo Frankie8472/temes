@@ -27,8 +27,10 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 
 
 def load_whitelist_chat():
-    file_path = "whitelist_chat"
+    file_name = "whitelist_chat"
     whitelist = list()
+    file_path = os.path.abspath(os.path.dirname(__file__))
+    file_path = os.path.join(file_path, file_name)
     with open(file_path, "r") as f:
         whitelist = f.read().splitlines()
         f.close()
@@ -37,8 +39,10 @@ def load_whitelist_chat():
 
 
 def load_whitelist_email():
-    file_path = "whitelist_email"
+    file_name = "whitelist_email"
     whitelist = list()
+    file_path = os.path.abspath(os.path.dirname(__file__))
+    file_path = os.path.join(file_path, file_name)
     with open(file_path, "r") as f:
         whitelist = f.read().splitlines()
         f.close()
@@ -46,8 +50,10 @@ def load_whitelist_email():
     return whitelist
 
 
-def load_token(file_path):
+def load_token(file_name):
     token = None
+    file_path = os.path.abspath(os.path.dirname(__file__))
+    file_path = os.path.join(file_path, file_name)
     with open(file_path, "r") as f:
         token = f.readline()
         f.close()
@@ -94,18 +100,21 @@ async def send_to_gmail(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    file_path_orig = os.path.abspath(os.path.dirname(__file__))
+    file_path_token = os.path.join(file_path_orig, 'token.json')
+    if os.path.exists(file_path_token):
+        creds = Credentials.from_authorized_user_file(file_path_token, SCOPES)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+            file_path_orig = os.path.abspath(os.path.dirname(__file__))
+            file_path_cred = os.path.join(file_path_orig, 'credentials.json')
+            flow = InstalledAppFlow.from_client_secrets_file(file_path_cred, SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.json', 'w') as token:
+        with open(file_path_token, 'w') as token:
             token.write(creds.to_json())
 
     try:
@@ -132,18 +141,21 @@ async def pull_email(context: ContextTypes.DEFAULT_TYPE):
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    file_path_orig = os.path.abspath(os.path.dirname(__file__))
+    file_path_token = os.path.join(file_path_orig, 'token.json')
+    if os.path.exists(file_path_token):
+        creds = Credentials.from_authorized_user_file(file_path_token, SCOPES)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+            file_path_orig = os.path.abspath(os.path.dirname(__file__))
+            file_path_cred = os.path.join(file_path_orig, 'credentials.json')
+            flow = InstalledAppFlow.from_client_secrets_file(file_path_cred, SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.json', 'w') as token:
+        with open(file_path_token, 'w') as token:
             token.write(creds.to_json())
 
     try:
