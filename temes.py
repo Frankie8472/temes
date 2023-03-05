@@ -82,12 +82,12 @@ def create_message(sender, to, subject, message_text):
 
 def send_message(service, user_id, message):
     try:
-        print(">> Trigger send_message")
+        print(">> Trigger send_message", flush=True)
         message = service.users().messages().send(userId=user_id, body=message).execute()
         # print('Message Id: %s' % message['id'])
         return message
     except Exception as e:
-        print('An error occurred: %s' % e)
+        print('An error occurred: %s' % e, flush=True)
         return None
 
 
@@ -95,7 +95,7 @@ async def send_to_gmail(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Shows basic usage of the Gmail API.
         Lists the user's Gmail labels.
         """
-    print(">> Trigger send_to_gmail")
+    print(">> Trigger send_to_gmail", flush=True)
     global channel
 
     creds = None
@@ -129,7 +129,7 @@ async def send_to_gmail(update: Update, context: ContextTypes.DEFAULT_TYPE):
             send_message(service, 'me', message_body)
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
-        print(f'An error occurred: {error}')
+        print(f'An error occurred: {error}', flush=True)
     return
 
 
@@ -137,7 +137,7 @@ async def pull_email(context: ContextTypes.DEFAULT_TYPE):
     """Shows basic usage of the Gmail API.
     Lists the user's Gmail labels.
     """
-    print(">> Trigger pull_email")
+    print(">> Trigger pull_email", flush=True)
     global channel
 
     creds = None
@@ -200,29 +200,29 @@ async def pull_email(context: ContextTypes.DEFAULT_TYPE):
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
-        print(f'An error occurred: {error}')
+        print(f'An error occurred: {error}', flush=True)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global channel
     global run
     if not usage_allowed(update):
-        print(">> Killed")
+        print(">> Killed", flush=True)
         await context.bot.leave_chat(chat_id=update.effective_chat.id)
         return
     if not run:
-        print(">> Started Successfully")
+        print(">> Started Successfully", flush=True)
         run = True
         send_to_gmail_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), send_to_gmail)
         application.job_queue.run_repeating(pull_email, interval=600, first=5)
         application.add_handler(send_to_gmail_handler)
         channel = update.effective_chat.id
-        print(f">> Channel ID: {update.effective_chat.id}")
+        print(f">> Channel ID: {update.effective_chat.id}", flush=True)
     return
 
 
 async def debug(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print(f">> Channel ID: {update.effective_chat.id}")
+    print(f">> Channel ID: {update.effective_chat.id}", flush=True)
     return
 
 
