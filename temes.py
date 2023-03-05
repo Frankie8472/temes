@@ -82,6 +82,7 @@ def create_message(sender, to, subject, message_text):
 
 def send_message(service, user_id, message):
     try:
+        print(">> Trigger send_message")
         message = service.users().messages().send(userId=user_id, body=message).execute()
         # print('Message Id: %s' % message['id'])
         return message
@@ -94,6 +95,7 @@ async def send_to_gmail(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Shows basic usage of the Gmail API.
         Lists the user's Gmail labels.
         """
+    print(">> Trigger send_to_gmail")
     global channel
 
     creds = None
@@ -135,6 +137,7 @@ async def pull_email(context: ContextTypes.DEFAULT_TYPE):
     """Shows basic usage of the Gmail API.
     Lists the user's Gmail labels.
     """
+    print(">> Trigger pull_email")
     global channel
 
     creds = None
@@ -211,9 +214,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         print(">> Started Successfully")
         run = True
         send_to_gmail_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), send_to_gmail)
-        application.job_queue.run_repeating(pull_email, interval=5, first=5)
+        application.job_queue.run_repeating(pull_email, interval=600, first=5)
         application.add_handler(send_to_gmail_handler)
         channel = update.effective_chat.id
+        print(f">> Channel ID: {update.effective_chat.id}")
     return
 
 
