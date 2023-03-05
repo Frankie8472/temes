@@ -13,7 +13,7 @@ from googleapiclient.errors import HttpError
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters
 
-debug_log = False
+debug_log = True
 
 # Global logging
 if debug_log:
